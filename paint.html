@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Paint</title>
+</head>
+<body style="margin:0">
+<canvas height="540" id="canvas" width="960">canvas</canvas>
+<div>
+    <label for="color_input">brush color:</label>
+    <input id="color_input" type="color" value="#000000">
+</div>
+<div>
+    brush shape:
+    <button onclick="circle_brush()">circle</button>
+    <button onclick="square_brush()">square</button>
+</div>
+<div>
+    <label for="size_input">brush size:</label>
+    <input id="size_input" max="256" min="0" type="number" value="1">
+</div>
+<div>
+    <label for="opacity_input">brush opacity:</label>
+    <input id="opacity_input" max="100" min="0" step="any" type="number" value="100">
+</div>
+<div>
+    <button onclick="fill_canvas()">fill canvas</button>
+</div>
+<div>
+    <button id="save_button" onclick="save_image()">save image</button>
+</div>
+<script>
+    let canvas
+    let context
+    let brush = 'circle'
+    let size = 1
+    let mouse_down = false;
+
+    window.addEventListener('load', init, false)
+
+    function init() {
+        canvas = document.getElementById('canvas')
+        context = canvas.getContext('2d')
+
+        canvas.addEventListener('mousedown', function (event) {
+            mouse_down = true
+            paint(event.offsetX, event.offsetY)
+        })
+        canvas.addEventListener('mousemove', function (event) {
+            if (mouse_down) paint(event.offsetX, event.offsetY)
+        })
+        canvas.addEventListener('mouseup', function (event) {
+            mouse_down = false
+            paint(event.offsetX, event.offsetY)
+        })
+
+        const color_selector = document.querySelector('#color_input')
+        color_selector.addEventListener('input', function (event) {
+            context.fillStyle = event.target.value
+        })
+        const size_selector = document.querySelector('#size_input')
+        size_selector.addEventListener('input', function (event) {
+            size = event.target.value
+        })
+        const opacity_selector = document.querySelector('#opacity_input')
+        opacity_selector.addEventListener('input', function (event) {
+            context.globalAlpha = event.target.value / 100
+        })
+    }
+
+    function paint(x, y) {
+        switch (brush) {
+            case 'circle':
+                context.beginPath()
+                context.arc(x, y, size / 2, 0, 2 * Math.PI)
+                context.fill()
+                break;
+            case 'square':
+                context.fillRect(x - size / 2, y - size / 2, size, size)
+        }
+    }
+
+    function circle_brush() {
+        brush = 'circle'
+    }
+
+    function square_brush() {
+        brush = 'square'
+    }
+
+    function fill_canvas() {
+        context.fillRect(0, 0, canvas.width, canvas.height)
+    }
+
+    function save_image() {
+        alert('save')
+        let link = document.createElement('a')
+        link.download = 'canvas.png'
+        link.href = canvas.toDataURL('image/png')
+        link.click()
+        link = null
+    }
+</script>
+</body>
+</html>
