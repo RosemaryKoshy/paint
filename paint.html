@@ -10,19 +10,17 @@
     <label for="color_input">brush color:</label>
     <input id="color_input" type="color" value="#000000">
 </div>
-<div>
-    brush shape:
+<div>brush shape:
     <button onclick="circle_brush()">circle</button>
     <button onclick="square_brush()">square</button>
 </div>
 <div>
     <label for="size_input">brush size:</label>
-    <input id="size_input" max="256" min="0" type="number" value="1">
+    <input id="size_input" max="256" min="0" type="number" value="16">
 </div>
 <div>
     <label for="opacity_input">brush opacity:</label>
-    <input id="opacity_input" max="100" min="0" step="any" type="number" value="100">
-</div>
+    <input id="opacity_input" max="100" min="0" step="any" type="number" value="50"></div>
 <div>
     <button onclick="fill_canvas()">fill canvas</button>
 </div>
@@ -32,8 +30,8 @@
 <script>
     let canvas
     let context
-    let brush = 'circle'
-    let size = 1
+    let brush = 'square'
+    let size = 16
     let mouse_down = false;
 
     window.addEventListener('load', init, false)
@@ -41,6 +39,7 @@
     function init() {
         canvas = document.getElementById('canvas')
         context = canvas.getContext('2d')
+        context.globalAlpha = 1 / 2
 
         canvas.addEventListener('mousedown', function (event) {
             mouse_down = true
